@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>昭和医科大学医学部陸上部 公式サイト</title>
+    <meta name="description" content="昭和医科大学医学部陸上競技部の公式ホームページです。最新の大会予定、直近の練習メニュー、活動場所などの情報を発信しています。新入部員・マネージャー募集中。">
+    <meta name="keywords" content="昭和大学, 昭和医科大学, 医学部, 陸上部, 練習メニュー, 大会日程, 部活">
+    <meta property="og:title" content="昭和医科大学医学部陸上部 公式サイト">
+    <meta property="og:description" content="昭和医科大学医学部陸上競技部の公式ホームページです。最新の練習予定や大会情報を確認できます。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://syntheon-masa-adm.github.io/showa-med-univ-trackandfield/"> 
+    <link rel="canonical" href="https://syntheon-masa-adm.github.io/showa-med-univ-trackandfield/">
+    
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-color: #e63946;
+            --info-color: #2a9d8f;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            width: 100%;
+            padding: 40px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative; 
+        }
+
+        .lang-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(4px);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .lang-switcher:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .lang-switcher .emoji {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            margin-top: -30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .countdown-target {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .days-remaining {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .days-unit {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .practice-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f8fdfc;
+            border: 2px solid #e0f2f1;
+        }
+
+        .practice-days {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .day-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .date-badge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50px;
+            flex-shrink: 0;
+        }
+
+        .practice-date {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .day-badge {
+            font-weight: bold;
+            color: white;
+            padding: 5px 0;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            width: 45px;
+            text-align: center;
+        }
+        .day-badge.mon { background-color: #fca311; }
+        .day-badge.wed { background-color: #4ea8de; }
+        .day-badge.fri { background-color: #ef476f; }
+
+        .loc-time-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+
+        .loc-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .day-loc {
+            font-weight: bold;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            line-height: 1.2;
+        }
+
+        .day-station {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+        }
+        .day-station::before {
+            content: "🚉 ";
+        }
+
+        .time-weather-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 70px;
+            flex-shrink: 0;
+        }
+
+        .day-time {
+            color: var(--info-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .weather-box {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #f0f4f8;
+            padding: 2px 6px;
+            border-radius: 8px;
+            min-height: 20px; 
+        }
+
+        .nav-button {
+            display: block;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(0,86,179,0.2);
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            background-color: #004494;
+        }
+
+        .nav-button.secondary {
+            background-color: #555;
+            box-shadow: 0 4px 15px rgba(85,85,85,0.2);
+        }
+
+        .sns-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .sns-link {
+            text-decoration: none;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .line { background-color: #06C755; }
+    </style>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SportsTeam",
+      "name": "昭和医科大学 陸上部",
+      "sport": "Track and Field",
+      "url": "https://syntheon-masa-adm.github.io/showa-med-univ-trackandfield/"
+    }
+    </script>
+</head>
+<body>
+
+    <header>
+        <a href="english/" class="lang-switcher">
+            <span class="emoji">🌍</span>
+            <span>English</span>
+        </a>
+
+        <h1>SHOWA MED-UNIV. TRACK & FIELD</h1>
+        <p>昭和医科大学 陸上部</p>
+    </header>
+
+    <div class="container">
+        <section class="card">
+            <div class="section-label">次の大会まで</div>
+            <div id="event-name" class="countdown-target">読み込み中...</div>
+            <div>
+                <span id="days-count" class="days-remaining">--</span>
+                <span class="days-unit">DAYS LEFT</span>
+            </div>
+        </section>
+
+        <section class="card practice-info">
+            <div class="section-label">直近の練習予定</div>
+            <div class="practice-days">
+                <!-- INJECT_PRACTICE_HERE -->
+            </div>
+        </section>
+
+        <a href="./menu/" class="nav-button">今週の練習メニュー</a>
+        <a href="./schedule/" class="nav-button secondary">大会スケジュール一覧</a>
+        <a href="./minigame/ライデンX/" class="nav-button" style="background-color:#8e44ad; font-size:1.1rem;">🎮 シューティングゲーム (ライデンX)</a>
+        <a href="./minigame/チャリ走.html" class="nav-button" style="background-color:#e67e22; font-size:1.1rem;">🏃‍♂️ アクションゲーム (チャリ走)</a>
+
+        <div class="sns-container">
+            <a href="https://www.instagram.com/showa__trackandfield" target="_blank" class="sns-link instagram">Instagram</a>
+            <a href="https://lin.ee/tf78hYX" target="_blank" class="sns-link line">LINE公式アカウント</a>
+        </div>
+    </div>
+
+    <script>
+        const meets = [
+            { date: "2026/05/02", name: "M×Kディスタンストライアル" },
+            { date: "2026/05/16", name: "M×Kディスタンストライアル" },
+            { date: "2026/06/06", name: "MDPV陸上大会" },
+            { date: "2026/07/19", name: "東コメ" },
+            { date: "2026/08/08", name: "東医体" },
+            { date: "2026/08/29", name: "全日本MDPV" },
+            { date: "2026/09/20", name: "関東医" }
+        ];
+
+        function initPortal() {
+            const now = new Date();
+            const futureMeets = meets
+                .map(m => ({ ...m, dateObj: new Date(m.date) }))
+                .filter(m => m.dateObj >= now.setHours(0,0,0,0))
+                .sort((a, b) => a.dateObj - b.dateObj);
+
+            if (futureMeets.length > 0) {
+                const next = futureMeets[0];
+                const diffTime = next.dateObj - new Date();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                document.getElementById('event-name').innerText = next.name;
+                document.getElementById('days-count').innerText = diffDays;
+            } else {
+                document.getElementById('event-name').innerText = "今シーズンの大会は終了しました";
+                document.getElementById('days-count').innerText = "0";
+            }
+        }
+
+        // 大会までのカウントダウンのみブラウザ側で実行（SEOに影響しないため）
+        initPortal();
+
+        async function loadWeather() {
+            const items = Array.from(document.querySelectorAll('.practice-item'));
+            if (!items.length) return;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const limitDate = new Date(today);
+            limitDate.setDate(today.getDate() + 7);
+
+            await Promise.all(items.map(async (item) => {
+                const { lat, lon, date: dateStr, time: timeStr } = item.dataset;
+                if (!lat || !lon || !dateStr || timeStr === "--:--") return;
+
+                const practiceDate = new Date(dateStr);
+                if (practiceDate < today || practiceDate > limitDate) return;
+
+                try {
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&start_date=${dateStr}&end_date=${dateStr}&hourly=temperature_2m,weathercode&timezone=Asia%2FTokyo`);
+                    if (!res.ok) return;
+                    const data = await res.json();
+
+                    const hour = timeStr.split(':')[0].padStart(2, '0');
+                    const targetTime = `${dateStr}T${hour}:00`;
+                    const idx = data.hourly.time.indexOf(targetTime);
+
+                    if (idx !== -1) {
+                        const box = item.querySelector('.weather-box');
+                        const codes = {0:"☀️",1:"⛅️",2:"⛅️",3:"☁️",45:"🌫",51:"☔️",80:"🌧",95:"⚡️"};
+                        box.innerHTML = `${codes[data.hourly.weathercode[idx]] || "🌡"} ${Math.round(data.hourly.temperature_2m[idx])}℃`;
+                        box.style.display = 'flex';
+                    }
+                } catch (e) {
+                    console.error("Weather API skipped for this specific item:", e);
+                }
+            }));
+        }
+        document.addEventListener("DOMContentLoaded", loadWeather);
+    </script>
+</body>
+</html>
