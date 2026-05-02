@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昭和医科大学陸上部 - 大会スケジュール</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-color: #e63946;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding-left: 20px;
+            margin-bottom: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            height: 100%;
+            width: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: -6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--accent-color);
+            z-index: 1;
+        }
+
+        .timeline-date {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .timeline-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .timeline-note {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .footer-note {
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="../">← ポータルへ戻る</a>
+    </nav>
+
+    <header>
+        <h1>2026年度 大会スケジュール</h1>
+    </header>
+
+    <main class="timeline" id="timeline-container">
+    </main>
+    
+    <div class="footer-note">
+        ＊第81回全日本MDPVについては出場未定です。
+    </div>
+
+    <script>
+        // 元々のスケジュールと画像のスケジュールを統合した構造化データ
+        // プロパティが存在しない場合でも表示が崩れないように設計
+        const events = [
+            // 元データからの継承（画像にないもの）
+            { sortDate: "2026/05/02", displayDate: "5月2日(土)", name: "M×Kディスタンストライアル（希望者のみ）", location: "", participants: "", note: "" },
+            { sortDate: "2026/05/16", displayDate: "5月16日(土)", name: "M×Kディスタンストライアル（希望者のみ）", location: "", participants: "", note: "" },
+            
+            // 画像からの追加データ
+            { sortDate: "2026/05/21", displayDate: "5月21〜24日", name: "関東インカレ (100m,400m)", location: "カンセキスタジアムとちぎ", participants: "2〜3名", note: "" },
+            { sortDate: "2026/05/24", displayDate: "5月24日(日)", name: "全日本薬学生対抗陸上競技大会", location: "大阪府服部緑地陸上競技場", participants: "約10人 (薬学部)", note: "" },
+            
+            // 元データと画像データのマージ（名称を補完）
+            { sortDate: "2026/06/06", displayDate: "6月6日(土)", name: "全関東 MDPV (MDPV陸上大会)", location: "大井ふ頭中央海浜公園陸上競技場", participants: "20〜30人 (全学部)", note: "" },
+            { sortDate: "2026/07/19", displayDate: "7月19日(日)", name: "東日本医療系学生対抗陸上競技大会 (東コメ)", location: "キューアンドエースタジアムみやぎ (宮城県)", participants: "20〜30人 (歯・薬・保健医療) ＋医 OP", note: "" },
+            { sortDate: "2026/08/08", displayDate: "8月8日(土)・9日(日)", name: "第69回東医体 (東日本医科学生総合体育大会)", location: "上尾運動公園陸上競技場 (埼玉県)", participants: "約10人 (医学部)", note: "" },
+            
+            // 画像からの追加データ
+            { sortDate: "2026/08/09", displayDate: "8月9日(日)", name: "第58回オールデンタル", location: "厚別公園競技場 (北海道札幌市)", participants: "3〜5人 (歯学部)", note: "" },
+            
+            // 元データと画像データのマージ
+            { sortDate: "2026/08/29", displayDate: "8月29日(土)・30日(日)", name: "全日本 MDPV", location: "紀三井寺公園陸上競技場 (和歌山県)", participants: "希望者数名 (全学部)", note: "" },
+            { sortDate: "2026/09/20", displayDate: "9月20日(日)", name: "関東医科大学対抗陸上競技大会 (関東医)", location: "カンセキスタジアムとちぎ", participants: "20〜30人 (全学部)", note: "" },
+            
+            // 画像からの追加データ
+            { sortDate: "2026/11/01", displayDate: "11月上旬", name: "霜月戦", location: "未定", participants: "20〜30人 (全学部)", note: "" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('timeline-container');
+            
+            // 内部用のsortDateで正確に時系列順に並べ替え
+            events.sort((a, b) => new Date(a.sortDate) - new Date(b.sortDate));
+
+            events.forEach(event => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                
+                // データが存在する項目のみ動的にHTMLを生成（Null回避）
+                item.innerHTML = `
+                    <div class="timeline-date">${event.displayDate}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${event.name}</div>
+                        <div class="timeline-note">
+                            ${event.location ? `<span>📍 場所: ${event.location}</span>` : ''}
+                            ${event.participants ? `<span>👥 参加予定人数: ${event.participants}</span>` : ''}
+                            ${event.note ? `<span>📝 ${event.note}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        });
+    </script>
+</body>
+</html>

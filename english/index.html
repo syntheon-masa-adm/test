@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Showa University Medical School Track & Field | International Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        
+        .animate-pulse-fast { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="relative bg-blue-700 text-white py-12 px-6 text-center shadow-lg">
+        <div class="absolute top-4 right-4 md:top-6 md:right-8">
+            <!-- 【修正箇所】曖昧なディレクトリ指定をやめ、ファイル名を明示 -->
+            <a href="../index.html" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm font-bold py-2 px-4 rounded-full transition backdrop-blur-sm border border-white/30 shadow-sm">
+                <span class="text-base leading-none">🇯🇵</span>
+                <span>see japanese version</span>
+            </a>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-2 uppercase mt-4 md:mt-0">Showa Med-Univ. Track & Field</h1>
+        <p class="text-blue-100 text-lg font-medium">Join our community of student-athletes!</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6 space-y-10">
+
+        <section class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+            <h2 class="text-2xl font-bold text-blue-700 border-b-2 border-blue-100 pb-2 mb-4">Welcome, International Students!</h2>
+            <p class="leading-relaxed mb-4">
+                Whether you are an experienced athlete or just looking to stay active, our club welcomes all medical, dental, pharmacy, and nursing students. Experience Japanese "Bukatsu" culture, make lifelong international friends, and stay healthy during your studies.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="https://www.instagram.com/showa__trackandfield" target="_blank" class="flex items-center justify-center bg-gradient-to-r from-pink-500 to-orange-500 text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-md">
+                    Follow us on Instagram
+                </a>
+                <a href="https://lin.ee/tf78hYX" target="_blank" class="flex items-center justify-center bg-[#06C755] text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-md">
+                    Contact via LINE
+                </a>
+                <a href="../minigame/ライデンX/" class="flex items-center justify-center bg-purple-600 text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-md">
+                    🎮 Shooting Game
+                </a>
+                <a href="../minigame/チャリ走.html" class="flex items-center justify-center bg-orange-500 text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-md">
+                    🏃‍♂️ Action Game
+                </a>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-2xl font-bold flex items-center">
+                <span class="bg-blue-700 text-white p-2 rounded-lg mr-3 shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                </span>
+                Upcoming Practice Schedule
+            </h2>
+            
+            <div id="dynamic-practice-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="col-span-full text-center py-8 text-slate-500 font-medium animate-pulse-fast">
+                    Fetching latest schedule from database...
+                </div>
+            </div>
+            
+            <p class="text-xs text-slate-400 mt-2 text-center">*Schedule is subject to change due to weather or track availability.</p>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                <h3 class="font-bold text-blue-800 mb-2 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                    Global Community
+                </h3>
+                <p class="text-sm text-blue-700 leading-relaxed">
+                    Our members have a long-standing passion for international cultures. Many of our athletes are actively involved with the <strong>International Exchange Center</strong>, making it the perfect environment for cross-cultural communication.
+                </p>
+            </div>
+            <div class="bg-green-50 p-6 rounded-2xl border border-green-100">
+                <h3 class="font-bold text-green-800 mb-2 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                    Social Events
+                </h3>
+                <p class="text-sm text-green-700 leading-relaxed">
+                    Beyond the track, we host welcome parties and "Talk & SNS" sessions. It's a great way to build strong ties with Japanese students who are eager to learn about your home country!
+                </p>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 text-white rounded-2xl p-8 shadow-xl">
+            <h2 class="text-2xl font-bold mb-6">Upcoming 2026 Season</h2>
+            <div class="space-y-6">
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-xs font-bold px-2 py-1 rounded mr-4 mt-1 whitespace-nowrap">JUL 19</div>
+                    <div>
+                        <h3 class="font-bold">East Japan Medical Students Championships (East Come)</h3>
+                        <p class="text-sm text-slate-400">Miyagi Pref. | Approx. 20–30 participants</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-xs font-bold px-2 py-1 rounded mr-4 mt-1 whitespace-nowrap">AUG 08</div>
+                    <div>
+                        <h3 class="font-bold">69th East Japan Medical Athletic Meet (Toh-I-Tai)</h3>
+                        <p class="text-sm text-slate-400">Saitama Pref. | Medical Students focus</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-xs font-bold px-2 py-1 rounded mr-4 mt-1 whitespace-nowrap">SEP 20</div>
+                    <div>
+                        <h3 class="font-bold">Kanto Medical University Championships (Kanto-I)</h3>
+                        <p class="text-sm text-slate-400">Tochigi Pref. | All Faculties welcome</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-100 py-8 text-center border-t border-slate-200 mt-12">
+        <p class="text-sm text-slate-500 font-bold uppercase tracking-widest">Showa University Medical School Track & Field Club</p>
+    </footer>
+
+    <script>
+        const translator = {
+            days: {
+                "月": "MON",
+                "火": "TUE",
+                "水": "WED",
+                "木": "THU",
+                "金": "FRI",
+                "土": "SAT",
+                "日": "SUN"
+            },
+            locations: {
+                "東大駒場": "UTokyo Komaba",
+                "織田フィールド": "Oda Field",
+                "織田": "Oda Field",
+                "等々力競技場": "Todoroki Stadium",
+                "等々力": "Todoroki Stadium",
+                "大井競技場": "Oi Stadium",
+                "大井": "Oi Stadium",
+                "夢の島競技場": "Yumenoshima Stadium",
+                "済美山": "Saibiyama Track",
+                "大学グラウンド": "University Ground",
+                "休み": "No Practice",
+                "未定": "TBA"
+            },
+            translateLoc: function(jpText) {
+                if(!jpText) return "TBA";
+                for (const [jp, en] of Object.entries(this.locations)) {
+                    if (jpText.includes(jp)) return en;
+                }
+                return jpText; 
+            }
+        };
+
+        const colorStyles = {
+            "MON": "border-orange-400 text-orange-500",
+            "WED": "border-blue-400 text-blue-500",
+            "FRI": "border-red-400 text-red-500",
+            "DEFAULT": "border-slate-400 text-slate-500"
+        };
+
+        function getWeatherEmoji(code) {
+            if (code === 0) return "☀️"; 
+            if (code === 1 || code === 2) return "⛅️"; 
+            if (code === 3) return "☁️"; 
+            if (code >= 45 && code <= 48) return "🌫"; 
+            if (code >= 51 && code <= 67) return "☔️"; 
+            if (code >= 71 && code <= 77) return "⛄️"; 
+            if (code >= 80 && code <= 82) return "🌧"; 
+            if (code >= 95) return "⚡️"; 
+            return "🌡";
+        }
+
+        async function fetchWeatherBulk(practices) {
+            if (!practices || practices.length === 0) return;
+
+            const validPractices = practices.filter(p => p.lat && p.lon && p.time !== "--:--");
+            if (validPractices.length === 0) return;
+
+            const lat = validPractices[0].lat;
+            const lon = validPractices[0].lon;
+
+            const dates = validPractices.map(p => p.fullDateStr).sort();
+            const startDate = dates[0];
+            const endDate = dates[dates.length - 1];
+
+            try {
+                const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m,weathercode&timezone=Asia%2FTokyo`;
+                
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Weather API fetch failed');
+                const weatherData = await response.json();
+
+                validPractices.forEach(p => {
+                    const startHour = parseInt(p.time.split(':')[0], 10);
+                    if (isNaN(startHour)) return;
+
+                    const targetTimePrefix = `${p.fullDateStr}T${String(startHour).padStart(2, '0')}:00`;
+                    const timeIndex = weatherData.hourly.time.findIndex(t => t === targetTimePrefix);
+
+                    if (timeIndex !== -1) {
+                        const temp = Math.round(weatherData.hourly.temperature_2m[timeIndex]);
+                        const code = weatherData.hourly.weathercode[timeIndex];
+                        const emoji = getWeatherEmoji(code);
+                        
+                        const weatherBox = document.getElementById(`weather-box-${p.id}`);
+                        if (weatherBox) {
+                            weatherBox.innerHTML = `${emoji} ${temp}℃`;
+                            weatherBox.style.display = 'flex'; 
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("Bulk weather fetch failed:", error); 
+            }
+        }
+
+        async function fetchAndRenderEnglishSchedule() {
+            const container = document.getElementById('dynamic-practice-container');
+            const gasUrl = "https://script.google.com/macros/s/AKfycbwJP2Ep80n7AdZrqYdgNlkdTpr2h41l6fqLT2pvXe1cxOzd3FR1rkhyhi7XcsXGIVx8/exec"; 
+
+            try {
+                const response = await fetch(gasUrl);
+                const data = await response.json();
+
+                if (data.error || !data.practices || data.practices.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-4 text-slate-500">No upcoming practices scheduled at this time.</div>';
+                    return;
+                }
+
+                container.innerHTML = ''; 
+
+                data.practices.forEach((p, index) => {
+                    p.id = `en-practice-${index}`; 
+
+                    const enDay = translator.days[p.dayLabel] || "DAY";
+                    const enLoc = translator.translateLoc(p.location);
+                    
+                    let enDate = p.displayDate;
+                    if(p.displayDate.includes('/')) {
+                        const parts = p.displayDate.split('/');
+                        const dateObj = new Date(2026, parseInt(parts[0])-1, parseInt(parts[1]));
+                        enDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }
+
+                    const colorClass = colorStyles[enDay] || colorStyles["DEFAULT"];
+                    const borderColor = colorClass.split(' ')[0];
+                    const textColor = colorClass.split(' ')[1];
+
+                    const cardHtml = `
+                        <div class="bg-white p-5 rounded-xl border-l-4 ${borderColor} shadow-sm transition hover:shadow-md flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="font-bold text-sm ${textColor}">${enDay}</span>
+                                    <span class="text-xs font-medium text-slate-400">${enDate}</span>
+                                </div>
+                                <p class="font-black text-lg text-slate-800 leading-tight mb-2">${enLoc}</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-2">
+                                <div class="flex items-center text-blue-600 font-bold">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    ${p.time === "--:--" ? "TBA" : p.time}
+                                </div>
+                                <div id="weather-box-${p.id}" class="text-sm font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded hidden items-center gap-1">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHtml);
+                });
+
+                fetchWeatherBulk(data.practices);
+
+            } catch (error) {
+                console.error("Translation & Fetch Error:", error);
+                container.innerHTML = '<div class="col-span-full text-center py-4 text-red-500">Failed to load schedule. Please try again later.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchAndRenderEnglishSchedule);
+    </script>
+</body>
+</html>
