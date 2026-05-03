@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チャリ走風ゲーム</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #87CEEB; /* 空の水色 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            touch-action: none; /* スマホでのスクロール防止 */
+        }
+        canvas {
+            background-color: #e0f7fa;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            max-width: 100%;
+            max-height: 100vh;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-family: sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            pointer-events: none;
+        }
+        #gameOverMsg {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: sans-serif;
+            font-size: 32px;
+            font-weight: bold;
+            color: #d32f2f;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        #gameOverMsg span {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div id="ui">距離: <span id="score">0</span> m</div>
+<canvas id="gameCanvas" width="800" height="400"></canvas>
+<div id="gameOverMsg">ゲームオーバー<br><span>クリックしてリトライ</span></div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const gameOverMsg = document.getElementById('gameOverMsg');
+
+    let animationId;
+    let isGameOver = false;
+    let score = 0;
+    let scrollSpeed = 6;
+    const gravity = 0.6;
+    const jumpPower = -10.5;
+
+    // プレイヤー（自転車）の初期状態
+    let player = {
+        x: 150,
+        y: 100,
+        width: 30,
+        height: 30,
+        vy: 0,
+        jumpCount: 0
+    };
+
+    let segments = [];
+
+    // 地形の1区画を管理するクラス
+    class Segment {
+        constructor(x1, y1, x2, y2, isAfterHole = false) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.isAfterHole = isAfterHole; // 穴の直後の壁かどうか
+        }
+        draw(ctx) {
+            // 土の部分
+            ctx.beginPath();
+            ctx.moveTo(this.x1, this.y1);
+            ctx.lineTo(this.x2, this.y2);
+            ctx.lineTo(this.x2, canvas.height);
+            ctx.lineTo(this.x1, canvas.height);
+            ctx.fillStyle = '#8B4513';
+            ctx.fill();
+            
+            // 草（地面の表面）
+            ctx.beginPath();
+            ctx.moveTo(this.x1, this.y1);
+            ctx.lineTo(this.x2, this.y2);
+            ctx.strokeStyle = '#228B22';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+            
+            // 穴に落ちて壁に激突した際の視覚的な赤線（Scratch版の再現）
+            if (this.isAfterHole) {
+                ctx.beginPath();
+                ctx.moveTo(this.x1, this.y1);
+                ctx.lineTo(this.x1, canvas.height);
+                ctx.strokeStyle = '#FF0000';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+            }
+        }
+    }
+
+    function initGame() {
+        isGameOver = false;
+        score = 0;
+        scrollSpeed = 6;
+        player.y = 100;
+        player.vy = 0;
+        player.jumpCount = 0;
+        segments = [];
+        gameOverMsg.style.display = 'none';
+        
+        // 初期の平坦な道
+        segments.push(new Segment(0, 300, 800, 300, false));
+        
+        if (animationId) cancelAnimationFrame(animationId);
+        update();
+    }
+
+    function generateTerrain() {
+        let lastSeg = segments[segments.length - 1];
+        // 画面外の余裕が少なくなったら次の地形を生成
+        if (lastSeg.x2 < canvas.width + 200) {
+            let isHole = Math.random() < 0.25; // 25%の確率で穴
+            
+            // 開始直後は穴を生成しない
+            if (isHole && lastSeg.x1 > 500) {
+                // 穴の幅を80〜140pxに制限（現在の物理演算上、2段ジャンプの最大飛距離は約350pxのため確実に越えられる）
+                let holeWidth = Math.random() * 60 + 80;
+                let nextY = lastSeg.y2 + (Math.random() - 0.5) * 80;
+                nextY = Math.max(150, Math.min(canvas.height - 50, nextY));
+                
+                // 穴（空白）を空けて次の地面を配置
+                let seg = new Segment(lastSeg.x2 + holeWidth, nextY, lastSeg.x2 + holeWidth + 200 + Math.random()*200, nextY + (Math.random()-0.5)*100, true);
+                segments.push(seg);
+            } else {
+                // 連続する坂道
+                let nextY = lastSeg.y2 + (Math.random() - 0.5) * 100;
+                nextY = Math.max(150, Math.min(canvas.height - 50, nextY));
+                let segWidth = Math.random() * 150 + 100;
+                segments.push(new Segment(lastSeg.x2, lastSeg.y2, lastSeg.x2 + segWidth, nextY, false));
+            }
+        }
+    }
+
+    function jump() {
+        if (isGameOver) {
+            initGame();
+            return;
+        }
+        if (player.jumpCount < 2) {
+            player.vy = jumpPower;
+            player.jumpCount++;
+        }
+    }
+
+    // 操作イベント（PC/スマホ両対応）
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'ArrowUp') {
+            jump();
+            e.preventDefault();
+        }
+    });
+    window.addEventListener('mousedown', jump);
+    window.addEventListener('touchstart', (e) => {
+        jump();
+        e.preventDefault();
+    }, {passive: false});
+
+    function gameOver() {
+        isGameOver = true;
+        gameOverMsg.style.display = 'block';
+    }
+
+    function update() {
+        if (isGameOver) return;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 進行に伴う難易度（スピード）の上昇
+        scrollSpeed += 0.002;
+        score += scrollSpeed / 30;
+        scoreEl.innerText = Math.floor(score);
+        
+        generateTerrain();
+        
+        let px = player.x + player.width / 2;
+        let groundY = null;
+        let isOnGround = false;
+        let currentSeg = null;
+        
+        // セグメントのスクロール処理
+        for (let i = 0; i < segments.length; i++) {
+            let seg = segments[i];
+            seg.x1 -= scrollSpeed;
+            seg.x2 -= scrollSpeed;
+            seg.draw(ctx);
+            
+            // プレイヤーのX座標が乗っているセグメントを検知し、坂のY座標を補間計算
+            if (px >= seg.x1 && px <= seg.x2) {
+                let t = (px - seg.x1) / (seg.x2 - seg.x1);
+                groundY = seg.y1 + t * (seg.y2 - seg.y1);
+                currentSeg = seg;
+            }
+        }
+        
+        // 画面外に消えたセグメントをメモリから解放
+        if (segments.length > 0 && segments[0].x2 < 0) {
+            segments.shift();
+        }
+        
+        // プレイヤーの物理演算
+        if (groundY !== null) {
+            let bottomY = player.y + player.height;
+            
+            // 地面より20px以上下なら「崖の側面に激突した」と判定
+            if (bottomY > groundY + 20) {
+                gameOver();
+                return;
+            } else if (player.vy >= 0 && bottomY >= groundY - 15) {
+                // 着地＆坂道に吸着して登る処理
+                player.y = groundY - player.height;
+                player.vy = 0;
+                player.jumpCount = 0;
+                isOnGround = true;
+            } else {
+                // ジャンプ上昇中など
+                player.vy += gravity;
+            }
+        } else {
+            // 穴の上（足場がない）
+            player.vy += gravity;
+        }
+        
+        player.y += player.vy;
+        
+        // 画面下への落下検知
+        if (player.y > canvas.height) {
+            gameOver();
+            return;
+        }
+        
+        // プレイヤーの描画（Scratch版に倣い絵文字を使用）
+        ctx.font = "40px sans-serif";
+        ctx.textBaseline = "bottom";
+        
+        ctx.save();
+        ctx.translate(player.x, player.y + player.height);
+        
+        // 坂道の角度、またはジャンプの落下速度に合わせて自転車を傾ける
+        if (!isOnGround) {
+            let angle = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, player.vy * 0.05));
+            ctx.rotate(angle);
+        } else if (currentSeg) {
+            let angle = Math.atan2(currentSeg.y2 - currentSeg.y1, currentSeg.x2 - currentSeg.x1);
+            ctx.rotate(angle);
+        }
+        
+        ctx.fillText("🚲", 0, 0);
+        ctx.restore();
+        
+        animationId = requestAnimationFrame(update);
+    }
+
+    // ゲーム開始
+    initGame();
+</script>
+</body>
+</html>
