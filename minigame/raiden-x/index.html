@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ライデンX：レガシー</title>
+    <style>
+        /* サイト全体ではなく、ゲームエリア内だけのスタイル設定 */
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 0 auto; /* 画面中央に配置 */
+            background-color: #000;
+            overflow: hidden;
+            border: 2px solid #333;
+            /* JSコード内のフォント指定に合わせる */
+            font-family: 'Press Start 2P', monospace, sans-serif; 
+        }
+
+        #game-canvas {
+            display: block;
+        }
+
+        /* UI表示（スコア、残機、ボム）のレイヤー */
+        #ui-layer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+            pointer-events: none; /* クリック判定をキャンバスに貫通させる */
+            text-shadow: 2px 2px 0 #000;
+            font-size: 14px;
+        }
+
+        /* ゲームオーバー画面（初期状態は .hidden で隠す） */
+        #game-over-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff3366;
+            text-shadow: 0 0 10px #ff3366;
+        }
+
+        #game-over-screen h2 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        #game-over-screen p {
+            color: #fff;
+            font-size: 16px;
+        }
+
+        /* JSの gameOverScreen.classList.remove('hidden') に対応 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* モバイル用コントロール */
+        #mobile-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 10;
+        }
+        #mobile-controls > div {
+            pointer-events: auto;
+        }
+        .dpad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .dpad-row {
+            display: flex;
+            gap: 50px;
+            margin: 5px 0;
+        }
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+        .control-btn:active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .action-btns {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            padding-bottom: 10px;
+        }
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        #btn-bomb {
+            background: rgba(255, 235, 59, 0.2);
+            border-color: rgba(255, 235, 59, 0.5);
+            color: #ffeb3b;
+        }
+        #btn-shoot {
+            background: rgba(0, 210, 255, 0.2);
+            border-color: rgba(0, 210, 255, 0.5);
+            color: #00d2ff;
+        }
+
+        /* スマホ画面用にレスポンシブ化 */
+        @media (max-width: 800px), (hover: none) and (pointer: coarse) {
+            body {
+                margin: 0;
+                background-color: #000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden; /* スクロール禁止 */
+            }
+            #game-container {
+                width: 100vw;
+                height: 133.33vw; /* 4:3 aspect ratio (800x600) */
+                max-height: 100vh;
+                max-width: 75vh;
+                border: none;
+                touch-action: none; /* デフォルトのタッチアクションを無効化 */
+            }
+            #game-canvas {
+                width: 100%;
+                height: 100%;
+            }
+            #mobile-controls {
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ゲームの全体を囲むコンテナ -->
+<div id="game-container">
+    
+    <!-- 描画用のキャンバス（JSの getElementById('game-canvas') とリンク） -->
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+    
+    <!-- UI要素（JSの getElementById とリンク） -->
+    <div id="ui-layer">
+        <div id="score-display">SCORE: 000000</div>
+        <div id="lives-display">LIVES: ♥ ♥ ♥</div>
+        <div id="bombs-display">BOMBS: ★ ★ ★</div>
+    </div>
+
+    <!-- ゲームオーバー画面（JSの getElementById('game-over-screen') とリンク） -->
+    <div id="game-over-screen" class="hidden">
+        <h2>GAME OVER</h2>
+        <p>Press 'R' to Restart<br><span id="game-over-touch-hint" class="hidden" style="font-size:12px;margin-top:10px;display:block">Tap to Restart</span></p>
+    </div>
+
+    <!-- モバイルコントロール用UI -->
+    <div id="mobile-controls" class="hidden">
+        <div class="dpad">
+            <div class="control-btn" id="btn-up">▲</div>
+            <div class="dpad-row">
+                <div class="control-btn" id="btn-left">◀</div>
+                <div class="control-btn" id="btn-right">▶</div>
+            </div>
+            <div class="control-btn" id="btn-down">▼</div>
+        </div>
+        <div class="action-btns">
+            <div class="control-btn action-btn" id="btn-bomb">BOMB</div>
+            <div class="control-btn action-btn" id="btn-shoot">FIRE</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 外部ファイルとしてJavaScriptを読み込む -->
+<script src="game.js"></script>
+
+</body>
+</html>
